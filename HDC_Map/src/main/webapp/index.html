@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+     <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+     <!-- Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <!-- Bootstrap Multiselect CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.15/dist/css/bootstrap-multiselect.css">
+    
+    <!-- Bootstrap Multiselect JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.15/dist/js/bootstrap-multiselect.min.js"></script>
+    
+    <!-- RequireJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+
+   	
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Map</title>
+  </head>
+  <body onload="initMap()">
+	<h1>HDC Custom Map</h1> 
+	
+	
+	<select id="sponsors" multiple="multiple">
+	    <option value="hdc">Housing Diversity Corp</option>
+	    <option value="ozn">OZ Navigator</option>
+	    <option value="anew">Anew Apartments</option>
+	    <option value="apodments.com">aPodments.com</option>
+	</select> 	
+	
+	<label class="switch">
+	  <input type="checkbox" id="toggleTracts">
+	  <span class="slider round"></span> 
+	</label> Opportunity Zones By Census Tract
+	
+	
+	<label class="switch">
+	  <input type="checkbox" id="toggleSeattleStationOverlay">
+	  <span class="slider round"></span> 
+	</label> Station Area Overlay (light rail)
+	
+	<label class="switch">
+	  <input type="checkbox" id="toggleMHA">
+	  <span class="slider round"></span> 
+	</label> Mandatory Housing Affordability Zones
+	
+	<label class="switch">
+	  <input type="checkbox" id="toggleHealth">
+	  <span class="slider round"></span> 
+	</label> Health Index
+	
+	
+	
+	<br/>
+	<br/>
+    <div id="map"></div>
+    
+       
+    <script>
+      let map;
+      let oz_tract_layer;
+      let seattle_station_layer;
+      let mha_layer;
+      let health_layer;
+      
+      let hdc_properties = [];
+      let ozn_properties = [];
+      let anew_properties = [];
+      let apod_properties = [];
+      
+      const sponsorMap = new Map([
+     	['hdc', hdc_properties],
+     	['ozn', ozn_properties],
+     	['anew', anew_properties],
+     	['apodments.com', apod_properties] 
+      ]);
+      
+      async function initMap() {
+		const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(47.606370, -122.320401), 
+          zoom: 10,
+          mapId: "4504f8b37365c3d0",
+        });
+        
+        window.AdvancedMarkerElement = AdvancedMarkerElement;
+        
+        oz_tract_layer = new google.maps.Data();
+        seattle_station_layer = new google.maps.Data();
+        mha_layer = new google.maps.Data();
+        low_income_layer = new google.maps.Data();
+        health_layer = new google.maps.Data();
+        
+        oz_tract_layer.loadGeoJson("wa_oz.geojson");
+        seattle_station_layer.loadGeoJson("seattleStationOverlay.txt"); 
+        mha_layer.loadGeoJson("MHA_zone.geojson");
+        health_layer.loadGeoJson("health_index2.geojson");
+        
+        //set up event listeners
+        document.getElementById('toggleTracts').addEventListener('change', toggleTracts);
+        document.getElementById('toggleSeattleStationOverlay').addEventListener('change', toggleSeattleStationOverlay);
+        document.getElementById('toggleMHA').addEventListener('change', toggleMHA);
+        document.getElementById('toggleHealth').addEventListener('change', toggleHealth);
+      }
+      
+      
+      function toggleTracts(){
+		if (document.getElementById('toggleTracts').checked){
+			oz_tract_layer.setStyle({
+			    fillColor: 'green',
+			    strokeColor: '#000',
+			    strokeOpacity: 1,
+			    strokeWeight: 1
+			 });
+			 
+			 oz_tract_layer.setMap(map);	
+		} else {
+			oz_tract_layer.setMap(null);
+		}
+	  }
+	  
+	  
+	  function toggleSeattleStationOverlay(){
+		  if (document.getElementById('toggleSeattleStationOverlay').checked){
+			   seattle_station_layer.setStyle({
+				    fillColor: 'purple',
+				    strokeColor: '#000',
+				    strokeOpacity: 1,
+				    strokeWeight: 1
+			   });
+				
+			   seattle_station_layer.setMap(map);  
+		  } else {
+			  seattle_station_layer.setMap(null);
+		  }
+	  }
+	  
+	   function toggleMHA(){
+		if (document.getElementById('toggleMHA').checked){			
+			mha_layer.setStyle({
+			    fillColor: 'blue',
+			    strokeColor: '#000',
+			    strokeOpacity: 1,
+			    strokeWeight: 1
+			 });
+			 
+			 mha_layer.setMap(map);	
+		} else {
+			mha_layer.setMap(null);
+		}
+	  }
+	  
+	 function toggleHealth(){
+		if (document.getElementById('toggleHealth').checked){	
+			health_layer.setStyle({
+			    fillColor: 'blue',
+			    strokeColor: '#000',
+			    strokeOpacity: 1,
+			    strokeWeight: 1
+			 });
+			 
+			 health_layer.setMap(map);	
+			 
+			 console.log("hi");
+		} else {
+			health_layer.setMap(null);
+		}
+	  }
+	  
+	  function escapeHtml(unsafe) {
+		  return unsafe 
+		  .replace(/&/g, "&amp;")
+		  .replace(/</g, "&lt;")
+		  .replace(/>/g, "&gt;")
+		  .replace(/"/g, "&quot;")
+		  .replace(/'/g, "&#039;");
+	  }
+	  
+	  function toggleHighlight(markerView, property) {
+		  if (markerView.content.classList.contains("highlight")) {
+		    markerView.content.classList.remove("highlight");
+		    markerView.zIndex = null;
+		  } else {
+		    markerView.content.classList.add("highlight");
+		    markerView.zIndex = 1;
+		  }
+	  }
+	  		
+		$(document).ready(function() {
+	        $('#sponsors').multiselect({
+	            includeSelectAllOption: true,
+	            nonSelectedText: 'Select Properites',
+	            
+	            onChange: function(option, checked) {
+		            // Get the value of the changed option
+		            var value = $(option).val();
+		            
+		            // Check if the option was selected or deselected
+		            if (checked) {
+		                console.log('Option ' + value + ' was selected');
+		                // Call function to show properties for this sponsor
+		                showProperties(value);
+		            } else {
+		                console.log('Option ' + value + ' was deselected');
+		                // Call function to hide properties for this sponsor
+		                hideProperties(value);
+		            }
+	        	},
+		        onSelectAll: function() {
+		            console.log('All options were selected');
+		            // Call function to show all properties
+		            showAllProperties();
+		        },
+		        onDeselectAll: function() {
+		            console.log('All options were deselected');
+		            // Call function to hide all properties
+		            hideAllProperties();
+		        }
+	        });	        
+    	});
+    	
+    	
+    	async function showProperties(sponsor) {
+		    if (!map) return;
+		    let properties = sponsorMap.get(sponsor);
+		    if (properties.length === 0) {
+		        await fetchAndCreateMarkers(sponsor);
+		    }
+		    properties = sponsorMap.get(sponsor);
+		    properties.forEach(marker => marker.setMap(map));
+		}
+		
+		function hideProperties(sponsor) {
+		    const properties = sponsorMap.get(sponsor);
+		    properties.forEach(marker => marker.setMap(null));
+		}
+		    	
+    	function showAllProperties() {
+		    sponsorMap.forEach((properties, sponsor) => {
+		        showProperties(sponsor);
+		    });
+		}
+		
+		function hideAllProperties() {
+		    sponsorMap.forEach((properties) => {
+		        properties.forEach(marker => marker.setMap(null));
+		    });
+		}
+    	
+    	
+    	async function fetchAndCreateMarkers(sponsor) {
+		    try {
+		        const response = await fetch("/HDC_Map/getDataServlet");
+		        const data = await response.json();
+		        
+		        data.forEach(item => {
+		            if (item.owner.toLowerCase() === sponsor) {
+		                const marker = new window.AdvancedMarkerElement({
+		                    map: map,
+		                    content: buildContent(item),
+		                    position: {
+		                        lat: parseFloat(item.lat),
+		                        lng: parseFloat(item.lng)
+		                    },
+		                    title: item.owner,
+		                });
+		                
+		                marker.addListener("click", () => {
+		                    toggleHighlight(marker, item);
+		                });
+		                
+		                sponsorMap.get(sponsor).push(marker);
+		            }
+		        });
+		    } catch (error) {
+		        console.error("Error fetching property data:", error);
+		    }
+		 }
+		 
+		function buildContent(property) {
+		  const content = document.createElement("div");
+		
+		  content.classList.add("property");
+		  content.innerHTML = `
+		    <div class="icon">
+		        <i aria-hidden="true" class="fa fa-icon fa-building" title="building"></i>
+		        <span class="fa-sr-only">building</span>
+		    </div>
+		    <div class="details">
+		        <div class="owner">${property.owner}: ${property.name}</div>
+		        <div class="address">${property.address}</div>
+		        <div class="features">
+		        <div>
+		            <i aria-hidden="true" class="fa-solid fa-door-open" title="room"></i>
+		            <span class="fa-sr-only">room</span>
+		            <span>${property.units}</span>
+		        </div>
+		        <div>
+		            <i aria-hidden="true" class="fa-solid fa-person-walking" title="walk_score"></i>
+		            <span class="fa-sr-only">Walk Score</span>
+		            <span>${property.walk_score}/100</span>
+		        </div>
+		        <div>
+		            <i aria-hidden="true" class="fa fa-ruler fa-lg size" title="size"></i>
+		            <span class="fa-sr-only">size</span>
+		            <span>${property.bld_size} ft<sup>2</sup></span>
+		        </div>
+		        </div>
+		    </div>
+		    `;
+		  return content;
+		}
+    	
+	  
+    </script>
+    
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&callback=initMap">
+    </script>
+    
+    
+  </body>
+</html>
+

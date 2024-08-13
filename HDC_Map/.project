@@ -45,11 +45,6 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/usc5/csci201/week11/mysql-connector-j-8.2.0%202/mysql-connector-j-8.2.0.jar</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/Current_Land_Use_Zoning.geojson</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/Current_Land_Use_Zoning_Additional_Overlay%20Areas.geojson</locationURI>
-		</link>
-		<link>
 			<name>src/main/webapp/MHA_zone.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/MHA_zone.geojson</locationURI>
@@ -60,19 +55,39 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/Station_Area_Overlay_(light_rail)_-6529769075527347152.geojson</locationURI>
 		</link>
 		<link>
+			<name>src/main/webapp/fmr.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/fmr.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/health.json</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health.json</locationURI>
+		</link>
+		<link>
 			<name>src/main/webapp/health_index2.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health_index2.geojson</locationURI>
 		</link>
 		<link>
+			<name>src/main/webapp/housing_data.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/housing_calc/housing_data.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/seattle_station_overlay.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/seattle_station_overlay.txt</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/urban_center.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/urban_center.geojson</locationURI>
+		</link>
+		<link>
 			<name>src/main/webapp/wa_oz.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/wa_oz.geojson</locationURI>
-		</link>
-		<link>
-			<name>src/main/webapp/WEB-INF/Current_Land_Use_Zoning.geojson</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Desktop/hdc/custom_map/Current_Land_Use_Zoning.geojson</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

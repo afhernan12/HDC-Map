@@ -58,23 +58,42 @@
 	</label> Mandatory Housing Affordability Zones
 	
 	<label class="switch">
+	  <input type="checkbox" id="toggleVillage">
+	  <span class="slider round"></span> 
+	</label> Urban Village
+	
+	<label class="switch">
 	  <input type="checkbox" id="toggleHealth">
 	  <span class="slider round"></span> 
 	</label> Health Index
 	
+	<label class="switch">
+	  <input type="checkbox" id="toggleKing">
+	  <span class="slider round"></span> 
+	</label> King County
+	
+	<label class="switch">
+	  <input type="checkbox" id="toggleFMR">
+	  <span class="slider round"></span> 
+	</label> Small Fair Market Rent 
+	
 	
 	
 	<br/>
 	<br/>
-    <div id="map"></div>
-    
+	<div id="map"></div>
+   
        
     <script>
       let map;
-      let oz_tract_layer;
+      let wa_oz_tract_layer;
       let seattle_station_layer;
       let mha_layer;
       let health_layer;
+      let village_layer;
+      
+      let king_county_layer;
+      let fmr_layer;
       
       let hdc_properties = [];
       let ozn_properties = [];
@@ -88,6 +107,13 @@
      	['apodments.com', apod_properties] 
       ]);
       
+      const sponsorColor = {
+		  'hdc': '#6E8658',
+		  'ozn': '#57473A',
+		  'anew': '#BE9A60',
+		  'apodments.com':'#73A1B2'
+	  }
+      
       async function initMap() {
 		const { Map } = await google.maps.importLibrary("maps");
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
@@ -100,37 +126,49 @@
         
         window.AdvancedMarkerElement = AdvancedMarkerElement;
         
-        oz_tract_layer = new google.maps.Data();
+        wa_oz_tract_layer = new google.maps.Data();
         seattle_station_layer = new google.maps.Data();
         mha_layer = new google.maps.Data();
         low_income_layer = new google.maps.Data();
+        village_layer = new google.maps.Data();
         health_layer = new google.maps.Data();
+        king_county_layer = new google.maps.Data();
+        fmr_layer = new google.maps.Data();
         
-        oz_tract_layer.loadGeoJson("wa_oz.geojson");
-        seattle_station_layer.loadGeoJson("Station_Area_Overlay.txt"); 
+        wa_oz_tract_layer.loadGeoJson("wa_oz.geojson");
+        seattle_station_layer.loadGeoJson("seattle_station_overlay.txt"); 
         mha_layer.loadGeoJson("MHA_zone.geojson");
-        health_layer.loadGeoJson("health_index2.geojson");
+        village_layer.loadGeoJson("urban_center.geojson");
+       	health_layer.loadGeoJson("health_index2.geojson");
+       	
+       	king_county_layer.loadGeoJson("housing_data.geojson");
+       	fmr_layer.loadGeoJson("fmr.geojson");
+       	
+       	infoWindow = new google.maps.InfoWindow();
         
         //set up event listeners
         document.getElementById('toggleTracts').addEventListener('change', toggleTracts);
         document.getElementById('toggleSeattleStationOverlay').addEventListener('change', toggleSeattleStationOverlay);
         document.getElementById('toggleMHA').addEventListener('change', toggleMHA);
+        document.getElementById('toggleVillage').addEventListener('change', toggleVillage);
         document.getElementById('toggleHealth').addEventListener('change', toggleHealth);
+        document.getElementById('toggleKing').addEventListener('change', toggleKing);
+        document.getElementById('toggleFMR').addEventListener('change', toggleFMR);
       }
-      
+     
       
       function toggleTracts(){
 		if (document.getElementById('toggleTracts').checked){
-			oz_tract_layer.setStyle({
+			wa_oz_tract_layer.setStyle({
 			    fillColor: 'green',
 			    strokeColor: '#000',
 			    strokeOpacity: 1,
 			    strokeWeight: 1
 			 });
 			 
-			 oz_tract_layer.setMap(map);	
+			 wa_oz_tract_layer.setMap(map);	
 		} else {
-			oz_tract_layer.setMap(null);
+			wa_oz_tract_layer.setMap(null);
 		}
 	  }
 	  
@@ -165,23 +203,156 @@
 		}
 	  }
 	  
-	 function toggleHealth(){
-		if (document.getElementById('toggleHealth').checked){	
-			health_layer.setStyle({
-			    fillColor: 'blue',
+	  function toggleVillage(){
+		  if (document.getElementById('toggleVillage').checked){
+			  console.log("in toogleVillage");
+			  village_layer.setStyle({
+			    fillColor: 'yellow',
 			    strokeColor: '#000',
 			    strokeOpacity: 1,
 			    strokeWeight: 1
 			 });
 			 
-			 health_layer.setMap(map);	
+			 village_layer.setMap(map);
+		  } else {
+			  village_layer.setMap(null);
+		  }
+	  }
+	  
+	 async function toggleHealth(){
+		if (document.getElementById('toggleHealth').checked){		
+			  health_layer.setStyle(function(feature) {
+				var healthScore = feature.getProperty('HEALTH_DISADV_SCORE');  
+				console.log(feature);
+				console.log("health score: ", healthScore);
+				return {
+					fillColor: 'red',
+					fillOpacity: healthScore,
+				    strokeColor: '#000',
+				    strokeOpacity: 1,
+				    strokeWeight: 0.5
+				};
+			 });
 			 
-			 console.log("hi");
+			 health_layer.addListener('mouseover', handleMouseOver);
+			 health_layer.addListener('mouseout', handleMouseOut);
+			 
+			 health_layer.setMap(map);
 		} else {
 			health_layer.setMap(null);
 		}
 	  }
 	  
+	  async function toggleKing(){
+		if (document.getElementById('toggleKing').checked){		
+			  king_county_layer.setStyle(function(feature) {
+				console.log(feature);
+				var renter_pct = feature.getProperty('rental_pct');
+				console.log("renter%", feature.getProperty('rental_pct'));
+		
+				return {
+					fillColor: 'purple',
+					fillOpacity: renter_pct,
+				    strokeColor: '#000',
+				    strokeOpacity: 1,
+				    strokeWeight: 1
+				};     
+			 });
+			 
+			 king_county_layer.addListener('click', handleMouseClickKing);
+			 
+			 king_county_layer.setMap(map);
+		} else {
+			king_county_layer.setMap(null);
+		}
+	  }
+	  
+	  async function toggleFMR(){
+		  if (document.getElementById('toggleFMR').checked){		
+			  fmr_layer.setStyle(function(feature) {
+				var zip = feature.getProperty('zip_code');  
+				console.log(feature);
+				console.log("zip code: ", zip);
+				return {
+					fillColor: 'red',
+				    strokeColor: '#000',
+				    strokeOpacity: 1,
+				    strokeWeight: 0.5
+				};
+			 });
+			 
+			 fmr_layer.addListener('click', handleMouseClickFMR);
+			 
+			 fmr_layer.setMap(map);
+		} else {
+			 fmr_layer.setMap(null);
+		}
+		  
+	  }
+	  
+	  function handleMouseClickKing(event){
+		  console.log("in king mouse click");
+	       var content = '<div class="info-window">' +
+	          '<h4> Income: ' + event.feature.getProperty('income') + '</h4>' +
+	          '<h3> Tract: ' + event.feature.getProperty('tract') + '</h3>' +
+	          '<p>american_indian: ' + event.feature.getProperty('american_indian') + '</p>' +
+	          '<p>asian: ' + event.feature.getProperty('asian') + '</p>' +
+	          '<p>black: ' + event.feature.getProperty('black') + '</p>' +
+	          '<p>hispanic: ' + event.feature.getProperty('hispanic') + '</p>' +
+	          '<p>white: ' + event.feature.getProperty('white') + '</p>' +
+	          '<p>median_rent ' + event.feature.getProperty('median_rent') + '</p>' +
+	          '<p>rental_units: ' + event.feature.getProperty('rental_units') + '</p>' +
+	          '<p>total_units: ' + event.feature.getProperty('total_units') + '</p>' +
+	          '<p>rental units / total units: ' + event.feature.getProperty('rental_pct').toFixed(3) + '</p>' +
+	          '</div>';
+	          
+	          infoWindow.setContent(content);
+	          infoWindow.setPosition(event.latLng);
+	          
+	          infoWindow.open(map);
+	  }
+	  
+	  function handleMouseOver(event){
+		  console.log("in mouse click");
+		  
+		  var content = '<div class="info-window">' +
+	          '<h4> Census Tract: ' + event.feature.getProperty('GEOID') + '</h4>' +
+	          '<p>Health Disadvantage Score: ' + event.feature.getProperty('HEALTH_DISADV_SCORE').toFixed(3) + '</p>' +
+	          '<p>Health Disadvantage Quntile: ' + event.feature.getProperty('HEALTH_DISADV_QUINTILE') + '</p>' +
+	          '<p>Life Expectancy: ' + event.feature.getProperty('LIFE_EXPECTANCY_AT_BIRTH').toFixed(1) + ' years</p>' +
+	          '<p>Adults with Obesity: ' + (event.feature.getProperty('PCT_ADULT_WITH_OBESITY') * 100).toFixed(1) + '%</p>' +
+	          '<p>Adults with Diabetes: ' + (event.feature.getProperty('PCT_ADULT_WITH_DIABETES') * 100).toFixed(1) + '%</p>' +
+	          '<p>Adults with Asthma: ' + (event.feature.getProperty('PCT_ADULT_WITH_ASTHMA') * 100).toFixed(1) + '%</p>' +
+	          '</div>';
+	          
+	          infoWindow.setContent(content);
+	          infoWindow.setPosition(event.latLng);
+	          
+	          infoWindow.open(map);
+	  }
+	  
+	  function handleMouseClickFMR(event){
+		  console.log("in mouse click");
+		  
+		  var content = '<div class="info-window">' +
+	          '<h4> zip_code: ' + event.feature.getProperty('zip_code') + '</h4>' +
+	          '<p>Efficiency: ' + event.feature.getProperty('Efficiency') + '</p>' +
+	          '<p>One-Bedroom: ' + event.feature.getProperty('One-Bedroom') + '</p>' +
+	          '<p>Two-Bedroom: ' + event.feature.getProperty('Two-Bedroom') + ' </p>' +
+	          '<p>Three-Bedroom: ' + event.feature.getProperty('Three-Bedroom') + '</p>' +
+	          '<p>Four-Bedroom: ' + event.feature.getProperty('Four-Bedroom') + '</p>' +
+	          '</div>';
+	          
+	          infoWindow.setContent(content);
+	          infoWindow.setPosition(event.latLng);
+	          
+	          infoWindow.open(map);
+	  }
+	  
+	  function handleMouseOut(event){  
+	  	  infoWindow.close();
+	  }
+	   
 	  function escapeHtml(unsafe) {
 		  return unsafe 
 		  .replace(/&/g, "&amp;")
@@ -294,11 +465,13 @@
 		 
 		function buildContent(property) {
 		  const content = document.createElement("div");
+		  const owner = property.owner.toLowerCase();
+		  const color = sponsorColor[owner];
 		
 		  content.classList.add("property");
 		  content.innerHTML = `
 		    <div class="icon">
-		        <i aria-hidden="true" class="fa fa-icon fa-building" title="building"></i>
+		        <i aria-hidden="true" class="fa fa-icon fa-building" title="building" style="color: ${color};"></i>
 		        <span class="fa-sr-only">building</span>
 		    </div>
 		    <div class="details">
@@ -325,12 +498,11 @@
 		    `;
 		  return content;
 		}
-    	
-	  
+		
     </script>
     
     <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&libraries=visualization&callback=initMap">
     </script>
     
     

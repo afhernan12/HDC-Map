@@ -1,9 +1,9 @@
 import java.io.IOException;
-//import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,21 +12,30 @@ import java.sql.SQLException;
 public class getDataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+    public getDataServlet() {
+        super();
+    }
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 		throws ServletException, IOException {
 		
-		System.out.println("in servlet");
+		System.out.println("in data servlet");
+		System.out.println("jdbc:mysql://localhost:3306/property_db");
+		
+		String data = "";
 		ResultSet locations = null;
 		try {
+			System.out.println("entering JDBC");
 			locations = JDBC.getLocation();
+			System.out.println("back in servlet");
+			data = myJsonConverter(locations);
 		} catch (ClassNotFoundException e) {
 			System.out.print(e.getMessage());
-		}
-		String data = "";
-		try {
-			data = myJsonConverter(locations);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
+		    System.out.println("SQL State: " + e.getSQLState());
+		    System.out.println("Error Code: " + e.getErrorCode());
 		} finally {
 			JDBC.closeAll();
 		}
@@ -36,7 +45,6 @@ public class getDataServlet extends HttpServlet {
 	}
 	
 	private String myJsonConverter(ResultSet rs) throws SQLException {
-		
 		String data = "[\n";
 		while (rs.next()) {
 			data += "{\n\"name\":" + "\"" + rs.getString(2) + "\",";
@@ -57,7 +65,7 @@ public class getDataServlet extends HttpServlet {
 		
 		String minusComma = data.substring(0, data.length() - 2);
 		minusComma += "\n]";
-		System.out.println(minusComma);
+		//System.out.println(minusComma);
 		return minusComma;
 	}
 }

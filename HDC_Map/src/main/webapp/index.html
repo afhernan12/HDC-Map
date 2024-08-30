@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-     <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
+     <title>HDC Map</title>
+     <link rel="stylesheet" type="text/css" href="styles.css" />
+     
+    <!-- Font Library --> 
+    <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
     
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -25,65 +29,110 @@
     
     <!-- RequireJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
-
-   	
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <title>Map</title>
+    
   </head>
   <body onload="initMap()">
-	<h1>HDC Custom Map</h1> 
+
+	<div id="container">
+		<div class="layers">	
+			
+			<div class="control-group">
+				<h2>HDC Map</h2>
+			</div>	
+			
+			<div class="control-group">
+				<span class="control-label">Opportunity Zones By Tract</span>
+				<label class="switch"> 
+				  <input type="checkbox" id="toggleTracts"> 
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Station Area Overlay (light rail)</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleSeattleStationOverlay">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Mandatory Housing Affordability Zones</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleMHA">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Urban Village</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleVillage">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Health Index</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleHealth">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">King County</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleKing">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Small Fair Market Rent</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleFMR">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">US Small Fair Market Rents</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleSAFMR">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<select id="sponsors" multiple="multiple">
+				    <option value="hdc">Housing Diversity Corp</option>
+				    <option value="ozn">OZ Navigator</option>
+				    <option value="anew">Anew Apartments</option>
+				    <option value="apodments.com">aPodments.com</option>
+				</select> 	
+			</div>
+		</div>	
 	
 	
-	<select id="sponsors" multiple="multiple">
-	    <option value="hdc">Housing Diversity Corp</option>
-	    <option value="ozn">OZ Navigator</option>
-	    <option value="anew">Anew Apartments</option>
-	    <option value="apodments.com">aPodments.com</option>
-	</select> 	
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleTracts">
-	  <span class="slider round"></span> 
-	</label> Opportunity Zones By Tract
-	
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleSeattleStationOverlay">
-	  <span class="slider round"></span> 
-	</label> Station Area Overlay (light rail)
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleMHA">
-	  <span class="slider round"></span> 
-	</label> Mandatory Housing Affordability Zones
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleVillage">
-	  <span class="slider round"></span> 
-	</label> Urban Village
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleHealth">
-	  <span class="slider round"></span> 
-	</label> Health Index
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleKing">
-	  <span class="slider round"></span> 
-	</label> King County
-	
-	<label class="switch">
-	  <input type="checkbox" id="toggleFMR">
-	  <span class="slider round"></span> 
-	</label> Small Fair Market Rent 
-	
-	
-	
-	<br/>
-	<br/>
-	<div id="map"></div>
-   
-       
+		<br/>
+		
+		<div id="legend" style="display: none; position: absolute; bottom: 30px; right: 30px; z-index: 1000; background: white; padding: 10px; border: 1px solid #ccc;">
+		  <h4>SAFMR Scores</h4>
+		  <h6>For One Bedroom</h6>
+		  <div><span style="background-color: green; width: 20px; height: 20px; display: inline-block; margin-right: 5px;"></span> Top 10%</div>
+		  <div><span style="background-color: yellow; width: 20px; height: 20px; display: inline-block; margin-right: 5px;"></span> Top 20%</div>
+		  <div><span style="background-color: red; width: 20px; height: 20px; display: inline-block; margin-right: 5px;"></span> Top 30%</div>
+		  <div><span style="background-color: gray; width: 20px; height: 20px; display: inline-block; margin-right: 5px;"></span> Below 30%</div>
+		  <div style="margin-top: 10px;">
+		    <div>Fill: MSA Score</div>
+		    <div>Border: US Score</div>
+		  </div>
+		</div>
+		
+		<div id="map"></div>
+   </div>
+ 
     <script>
       let map;
       let wa_oz_tract_layer;
@@ -94,6 +143,7 @@
       
       let king_county_layer;
       let fmr_layer;
+      let zip_codes;
       
       let hdc_properties = [];
       let ozn_properties = [];
@@ -134,15 +184,17 @@
         health_layer = new google.maps.Data();
         king_county_layer = new google.maps.Data();
         fmr_layer = new google.maps.Data();
+        zip_codes = new google.maps.Data();
         
         wa_oz_tract_layer.loadGeoJson("wa_oz.geojson");
         seattle_station_layer.loadGeoJson("seattle_station_overlay.txt"); 
         mha_layer.loadGeoJson("MHA_zone.geojson");
         village_layer.loadGeoJson("urban_center.geojson");
        	health_layer.loadGeoJson("health_index2.geojson");
+       	king_county_layer.loadGeoJson("king_county_housing.geojson");
+       	fmr_layer.loadGeoJson("fmr_vps.geojson");
+       	zip_codes.loadGeoJson("zip_code_safmr.geojson");
        	
-       	king_county_layer.loadGeoJson("housing_data.geojson");
-       	fmr_layer.loadGeoJson("fmr.geojson");
        	
        	infoWindow = new google.maps.InfoWindow();
         
@@ -154,7 +206,74 @@
         document.getElementById('toggleHealth').addEventListener('change', toggleHealth);
         document.getElementById('toggleKing').addEventListener('change', toggleKing);
         document.getElementById('toggleFMR').addEventListener('change', toggleFMR);
+        document.getElementById('toggleSAFMR').addEventListener('change', toggleSAFMR);
       }
+      
+      async function toggleSAFMR(){
+		  const legendElement = document.getElementById('legend');
+		   if (document.getElementById('toggleSAFMR').checked) {
+		    zip_codes.setStyle(function(feature) {
+		      const msa_score = feature.getProperty('score');
+		      const us_score = feature.getProperty('us_score');
+		      
+			  // Determine fill color based on MSA score
+			  let fillColor;
+			  if (msa_score >= 0.9) {
+				  fillColor = 'green';
+			  } else if (msa_score >= 0.8) {
+			      fillColor = 'yellow';
+			  } else if (msa_score >= 0.7) {
+			      fillColor = 'red';
+			  } else {
+			      fillColor = 'gray';
+			  }
+			
+		      // Determine stroke color based on US score
+		      let strokeColor;
+		      if (us_score >= 0.9) {
+		        strokeColor = 'green';
+		      } else if (us_score >= 0.8) {
+		        strokeColor = 'yellow';
+		      } else if (us_score >= 0.7) {
+		        strokeColor = 'red';
+		      } else {
+		        strokeColor = 'gray';
+		      }
+		      
+		      // Determine z-index based on stroke color priority
+		      let zIndex;
+		      switch (strokeColor) {
+		        case 'green':
+		          zIndex = 4;
+		          break;
+		        case 'yellow':
+		          zIndex = 3;
+		          break;
+		        case 'red':
+		          zIndex = 2;
+		          break;
+		        default:
+		          zIndex = 1;
+		      }
+			
+		      return {
+		        fillColor: fillColor,
+		        fillOpacity: 0.7,
+		        strokeColor: strokeColor,
+		        strokeOpacity: 1,
+		        strokeWeight: 2,
+		        zIndex: zIndex
+		      };
+		    });
+	
+		    zip_codes.addListener('click', handleMouseClickSAFMR);
+		    zip_codes.setMap(map);
+		    legendElement.style.display = 'block'; // Show the legend
+		  } else {
+		    zip_codes.setMap(null);
+		    legendElement.style.display = 'none'; // Show the legend
+		  }
+	  }
      
       
       function toggleTracts(){
@@ -247,15 +366,25 @@
 		if (document.getElementById('toggleKing').checked){		
 			  king_county_layer.setStyle(function(feature) {
 				console.log(feature);
+				
+				var income = feature.getProperty('income');
+				var rent = feature.getProperty('median_rent');
 				var renter_pct = feature.getProperty('rental_pct');
-				console.log("renter%", feature.getProperty('rental_pct'));
-		
+				
+				if (rent < 0) {
+					console.log("nan rent", rent);
+					rent = 1000;
+					console.log("non nan rent", rent);
+				}
+				
+				var burdened = rent * 12 / income;
+
 				return {
 					fillColor: 'purple',
 					fillOpacity: renter_pct,
 				    strokeColor: '#000',
 				    strokeOpacity: 1,
-				    strokeWeight: 1
+				    strokeWeight: .5
 				};     
 			 });
 			 
@@ -268,16 +397,45 @@
 	  }
 	  
 	  async function toggleFMR(){
-		  if (document.getElementById('toggleFMR').checked){		
+		  if (document.getElementById('toggleFMR').checked){
+			  let min = Infinity;
+			  let max = -Infinity;
+			  
+			  fmr_layer.forEach((feature) => {
+				  const fmr = feature.getProperty('One-Bedroom');
+				  if (fmr < min) min = fmr;
+				  if (fmr > max) max = fmr;
+			  });
+			  
+			  		
 			  fmr_layer.setStyle(function(feature) {
 				var zip = feature.getProperty('zip_code');  
 				console.log(feature);
-				console.log("zip code: ", zip);
+				
+				const fmr = feature.getProperty('One-Bedroom');
+				const normalizedFMR = (fmr - min) /(max - min);
+				
+				// Interpolate between red (low FMR) and green (high FMR)
+				let red, green;
+		        if (normalizedFMR < 0.5) {
+			        // Red to Yellow
+			        red = 255;
+			        green = Math.round(255 * (normalizedFMR * 2));
+		        } else {
+			        // Yellow to Green
+			        red = Math.round(255 * ((1 - normalizedFMR) * 2));
+			        green = 255;
+		        }
+				
+				const color = `rgb(${red}, ${green}, 0)`;
+				console.log(color);
+		
 				return {
-					fillColor: 'red',
+					fillColor: color,
+					fillOpacity: .7,
 				    strokeColor: '#000',
 				    strokeOpacity: 1,
-				    strokeWeight: 0.5
+				    strokeWeight: .5
 				};
 			 });
 			 
@@ -334,13 +492,46 @@
 	  function handleMouseClickFMR(event){
 		  console.log("in mouse click");
 		  
+		  var tier = event.feature.getProperty('tier');
+		  if (tier != null){
+			  tier = tier.toString();
+			  if (tier == '4') tier = "VPS";
+		  } 
+		  
 		  var content = '<div class="info-window">' +
-	          '<h4> zip_code: ' + event.feature.getProperty('zip_code') + '</h4>' +
+	          '<h4>Zip Code: ' + event.feature.getProperty('zip_code') + '</h4>' +
 	          '<p>Efficiency: ' + event.feature.getProperty('Efficiency') + '</p>' +
 	          '<p>One-Bedroom: ' + event.feature.getProperty('One-Bedroom') + '</p>' +
 	          '<p>Two-Bedroom: ' + event.feature.getProperty('Two-Bedroom') + ' </p>' +
 	          '<p>Three-Bedroom: ' + event.feature.getProperty('Three-Bedroom') + '</p>' +
 	          '<p>Four-Bedroom: ' + event.feature.getProperty('Four-Bedroom') + '</p>' +
+	          '<p>tier: ' +  tier + '</p>' +
+	          '<p>vps_0: ' + event.feature.getProperty('vps_0') + '</p>' +
+	          '<p>vps_1: ' + event.feature.getProperty('vps_1') + '</p>' +
+	          '<p>vps_2: ' + event.feature.getProperty('vps_2') + '</p>' +
+	          '<p>vps_4: ' + event.feature.getProperty('vps_4') + '</p>' +
+	          '</div>';
+	          
+	          infoWindow.setContent(content);
+	          infoWindow.setPosition(event.latLng);
+	          
+	          infoWindow.open(map);
+	  }
+	  
+	  function handleMouseClickSAFMR(event){		  
+		  var content = '<div class="info-window">' +
+	          '<h4>' + event.feature.getProperty('area_name') + '</h4>' +
+	          '<h4>Zip Code: ' + event.feature.getProperty('zip_code') + '</h4>' +
+	          '<p>Efficiency: ' + event.feature.getProperty('Efficiency') + '</p>' +
+	          '<p>One-Bedroom: ' + event.feature.getProperty('One-Bedroom') + '</p>' +
+	          '<p>Two-Bedroom: ' + event.feature.getProperty('Two-Bedroom') + ' </p>' +
+	          '<p>Three-Bedroom: ' + event.feature.getProperty('Three-Bedroom') + '</p>' +
+	          '<p>Four-Bedroom: ' + event.feature.getProperty('Four-Bedroom') + '</p>' +
+	          '<p>Min-One-Bed: ' + event.feature.getProperty('min_oneBed') + '</p>' +
+	          '<p>Max-One-Bed: ' + event.feature.getProperty('max_oneBed') + '</p>' +
+	          '<p>MSA Score: ' + event.feature.getProperty('score') + '</p>' +
+	          '<p>US Score: ' + event.feature.getProperty('us_score') + '</p>' +
+	          '<p>Year: ' + event.feature.getProperty('year') + '</p>' +
 	          '</div>';
 	          
 	          infoWindow.setContent(content);
@@ -498,9 +689,8 @@
 		    `;
 		  return content;
 		}
-		
     </script>
-    
+        
     <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&libraries=visualization&callback=initMap">
     </script>

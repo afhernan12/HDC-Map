@@ -2,19 +2,31 @@ import java.sql.*;
 
 public class JDBC {
 	public static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-	public static final String APOD_URL = "jdbc:mysql://localhost:3306/property_db";
+	public static final String JDBC_URL = "jdbc:mysql://localhost:3306/property_db";
 	public static final String USER = "root";
-	public static final String PASS = "afhernan";
+	//public static final String PASS = "Super@ngel13!";
+//	public static final String USER = "angel_hdc";
+//	public static final String PASS = "Super@ngel13!";
+	
+//    public static final String JDBC_URL = "jdbc:mysql://localhost:3306/property_db";
+//    public static final String USER = "root";
+    public static final String PASS = "afhernan";
+	
 	
 	private static Connection conn;
 	private static Statement st;
 	private static ResultSet rs;
 	
 	public static  ResultSet getLocation() throws ClassNotFoundException {
+		System.out.println("in jdbc");
 		
-		try {
+		System.out.print(USER + " " + PASS);
+		try {			
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(APOD_URL, USER, PASS);
+			System.out.println("Driver loaded successfully");
+			conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			System.out.println("Connected to database successfully");
+	
 			st = conn.createStatement();
 			rs = st.executeQuery("select * from property");
 			
@@ -24,7 +36,12 @@ public class JDBC {
 //			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		}
+			e.printStackTrace();
+		} catch (Exception e) {
+            System.out.println("General Exception:");
+            e.printStackTrace();
+            return null;
+        }
 		return rs;
 	}
 	
@@ -44,5 +61,4 @@ public class JDBC {
 		}
 		
 	}
-
 }

@@ -30,16 +30,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>gson-2.10.1.jar</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Desktop/usc5/csci201/eclipse-workspace/afhernan_CSCI201_Assignment3/gson-2.10.1.jar</locationURI>
-		</link>
-		<link>
-			<name>httpclient-4.5.14-javadoc.jar</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/eclipse-workspace/storeIt/src/main/webapp/WEB-INF/lib/httpclient-4.5.14-javadoc.jar</locationURI>
-		</link>
-		<link>
 			<name>mysql-connector-j-8.2.0.jar</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/usc5/csci201/week11/mysql-connector-j-8.2.0%202/mysql-connector-j-8.2.0.jar</locationURI>
@@ -60,6 +50,11 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/fmr.geojson</locationURI>
 		</link>
 		<link>
+			<name>src/main/webapp/fmr_vps.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/fmr_vps.geojson</locationURI>
+		</link>
+		<link>
 			<name>src/main/webapp/health.json</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health.json</locationURI>
@@ -70,9 +65,9 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health_index2.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/housing_data.geojson</name>
+			<name>src/main/webapp/king_county_housing.geojson</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/housing_calc/housing_data.geojson</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/housing_calc/king_county_housing.geojson</locationURI>
 		</link>
 		<link>
 			<name>src/main/webapp/seattle_station_overlay.txt</name>
@@ -88,6 +83,11 @@
 			<name>src/main/webapp/wa_oz.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/wa_oz.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/zip_code_safmr.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/zipcodes/zip_code_safmr.geojson</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

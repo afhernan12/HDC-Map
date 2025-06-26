@@ -1,34 +1,45 @@
+
+
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-@WebServlet("/getDataServlet")
-public class getDataServlet extends HttpServlet {
+/**
+ * Servlet implementation class getSchoolsServlet
+ */
+@WebServlet("/getSchoolsServlet")
+public class getSchoolsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-    public getDataServlet() {
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public getSchoolsServlet() {
         super();
     }
-	
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		
- 
+		System.out.println("in data servlet");
 		System.out.println("jdbc:mysql://localhost:3306/property_db");
 		
 		String data = "";
 		ResultSet locations = null;
 		try {
 			System.out.println("entering JDBC");
-			locations = JDBC.getLocation();
+			locations = JDBC.getSchool();
 			System.out.println("back in servlet");
-			data = myJsonConverter(locations);
+			data = mySchoolJsonConverter(locations);
 		} catch (ClassNotFoundException e) {
 			System.out.print(e.getMessage());
 		} catch (SQLException e) {
@@ -44,22 +55,14 @@ public class getDataServlet extends HttpServlet {
 		response.getWriter().write(data);
 	}
 	
-	private String myJsonConverter(ResultSet rs) throws SQLException {
+	private String mySchoolJsonConverter(ResultSet rs) throws SQLException {
 		String data = "[\n";
 		while (rs.next()) {
 			data += "{\n\"name\":" + "\"" + rs.getString(2) + "\",";
 			data += "\n\"address\":" + "\"" + rs.getString(3) + "\",";
-			data += "\n\"units\":" + "\"" + rs.getString(4) + "\",";
-			data += "\n\"bld_size\":" + "\"" + rs.getString(5) + "\",";
-			data += "\n\"unit_size\":" + "\"" + rs.getString(6) + "\",";
-			data += "\n\"walk_score\":" + "\"" + rs.getString(7) + "\",";
-			data += "\n\"bike_score\":" + "\"" + rs.getString(8) + "\",";
-			data += "\n\"transit_score\":" + "\"" + rs.getString(9) + "\",";
-			data += "\n\"lat\":" + "\"" + rs.getString(10) + "\",";
-			data += "\n\"lng\":" + "\"" + rs.getString(11) + "\",";
-			data += "\n\"owner\":" + "\"" + rs.getString(12) + "\",";
-			data += "\n\"url\":" + "\"" + rs.getString(13) + "\",";
-			data += "\n\"status\":" + "\"" + rs.getString(14) + "\"\n},\n";
+			data += "\n\"lat\":" + "\"" + rs.getString(4) + "\",";
+			data += "\n\"lng\":" + "\"" + rs.getString(5) + "\",";
+			data += "\n\"category\":" + "\"" + rs.getString(6) + "\"\n},\n";
 		}
 		
 		
@@ -68,4 +71,7 @@ public class getDataServlet extends HttpServlet {
 		//System.out.println(minusComma);
 		return minusComma;
 	}
+
+	
+
 }

@@ -35,57 +35,122 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/usc5/csci201/week11/mysql-connector-j-8.2.0%202/mysql-connector-j-8.2.0.jar</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/MHA_zone.geojson</name>
+			<name>src/main/webapp/geoData/CA_WA_Tracts.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/census_tract/CA_WA_Tracts.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/Frequent_Transit_Service_Area.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/Seattle/Frequent_Transit_Service_Area.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/HOA.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/FHFA/HOA.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/LA_Seattle_CD.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/council_districts/LA_Seattle_CD.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/MHA_zone.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/MHA_zone.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/Station_Area_Overlay.geojson</name>
+			<name>src/main/webapp/geoData/SeattleZoningCode.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/SeattleZoningCode.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/Station_Area_Overlay.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/Station_Area_Overlay_(light_rail)_-6529769075527347152.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/fmr.geojson</name>
+			<name>src/main/webapp/geoData/USDA_Multifamily_wgs84.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/USDA/SFH_MFH_Ineligible20180823/USDA_Multifamily_wgs84.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/affh.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/AFFH/shapefile/affh.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/ca_wa_opportunity_zones.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/ca_wa_opportunity_zones.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/election_map_2024.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/US%20States/election_map_2024.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/fmr.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/fmr.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/fmr_vps.geojson</name>
+			<name>src/main/webapp/geoData/fmr_vps.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/fmr_vps.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/health.json</name>
+			<name>src/main/webapp/geoData/hacla_comparison.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/HACLA/hacla_comparison.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/hacla_vps.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/HACLA/hacla_vps.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/health.json</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health.json</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/health_index2.geojson</name>
+			<name>src/main/webapp/geoData/health_index2.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/health_index2.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/king_county_housing.geojson</name>
+			<name>src/main/webapp/geoData/king_county_housing.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/housing_calc/king_county_housing.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/seattle_station_overlay.txt</name>
+			<name>src/main/webapp/geoData/lr1_base.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/mygeodata/Seattle/lr1_base.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/seattle_station_overlay.txt</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/seattle_station_overlay.txt</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/urban_center.geojson</name>
+			<name>src/main/webapp/geoData/urban_center.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/urban_center.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/wa_oz.geojson</name>
+			<name>src/main/webapp/geoData/us_fmr_zip_code.geojson</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/zipcodes/us_fmr_zip_code.geojson</locationURI>
+		</link>
+		<link>
+			<name>src/main/webapp/geoData/wa_oz.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/wa_oz.geojson</locationURI>
 		</link>
 		<link>
-			<name>src/main/webapp/zip_code_safmr.geojson</name>
+			<name>src/main/webapp/geoData/zip_code_safmr.geojson</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Desktop/hdc/custom_map/zipcodes/zip_code_safmr.geojson</locationURI>
 		</link>

@@ -1,0 +1,849 @@
+html, body {
+	padding: 0;
+	margin :0;
+	font-family: sans-serif;
+	background-color: #407f7f;
+}
+
+#container {
+	display: flex;
+	flex-direction: row;
+	width: 100vw;
+	height: 100vh;
+	background-color: #407f7f;
+	color: #ffffff;
+	gap: 0px;
+}
+
+#map {
+   width: 80%;
+   height: 100%;
+   overflow: hidden;
+   border: thin solid white;
+}
+
+.layers {
+	margin-top: 10px;
+	margin-left: 0px;
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+	gap: 10px;
+	font-family: sans-serif;
+	font-weight: normal;
+	font-size: 16px;
+	height: 100vh;
+	overflow-y: auto;
+	padding: 20px;
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+.mapHeader {
+	margin-left: 12px;
+}
+
+.mapHeader a {
+	text-decoration: none;
+	color: white;
+	font-size: 27px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+}
+
+.mapHeader a:hover {
+	text-decoration: none;
+	color:#7fbd45;
+}
+
+
+.control-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.control-label {
+    margin-left: 12px;
+    width: 60%;
+    position: relative;
+    padding-right: 0px;
+}
+
+.info-icon {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.info-icon .info-text {
+    display: none;
+    position: absolute;
+    left: 25px; /* Position relative to info icon */
+    top: -10px;
+    width: 150px;
+    background-color: #e5e5e5;
+    border: 2px solid black;
+    color: black;
+    border-radius: 5px;
+    padding: 8px;
+    z-index: 1;
+}
+
+.info-icon:hover {
+    color: #7fbd45;
+}
+
+
+/* Add these new styles at the end of your CSS file */
+
+@media screen and (max-width:900px) {
+    #container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    #map {
+        width: 100%;
+        height: 80vh; /* Adjust this value as needed */
+    }
+
+    .layers {
+		flex: 1;
+        width: 100%;
+        padding: 16px;
+        justify-content: center;
+    }
+
+    .control-label {
+        font-size: 16px;
+        flex-grow: 1;
+        width: 60%;
+    }
+    
+    .switch {
+		margin-right: 15px;
+	}
+}
+
+/* Optional: Adjust font sizes for better readability on small screens */
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 17px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    .control-group {
+		gap: 1px;
+		width: 100%;
+	}
+	
+	.control-label {
+		width: 60%;
+	}
+    
+    .control-label {
+        font-size: 16px;
+        padding-right: 0px;
+    }
+    
+    .switch {
+		margin-right: 10px;
+	}
+    
+}
+	
+/********************************************/
+
+:root {
+	--building-color: #EFE9E1;
+}
+
+/*
+ * Property styles in unhighlighted state.
+ */
+.property {
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  color: #263238;
+  display: flex;
+  font-size: 14px;
+  gap: 15px;
+  height: 30px;
+  justify-content: center;
+  padding: 4px;
+  position: relative;
+  position: relative;
+  transition: all 0.3s ease-out;
+  width: 30px;
+}
+
+.property::after {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #FFFFFF;
+  content: "";
+  height: 0;
+  left: 50%;
+  position: absolute;
+  top: 95%;
+  transform: translate(-50%, 0);
+  transition: all 0.3s ease-out;
+  width: 0;
+  z-index: 1;
+}
+
+.property .icon {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.property .icon svg {
+  height: 20px;
+  width: auto;
+}
+
+.property .details {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+}
+
+.property .address {
+  color: #9E9E9E;
+  font-size: 10px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.property .features {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.property .features > div {
+  align-items: center;
+  background: #D0D5CE;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  display: flex;
+  font-size: 10px;
+  gap: 5px;
+}
+
+/*
+ * Property styles in highlighted state.
+ */
+.property.highlight {
+  background-color: #EFE9E1;
+  border-radius: 8px;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+  height: 80px;
+  padding: 8px 15px;
+  width: auto;
+}
+
+.property.highlight::after {
+  border-top: 9px solid #FFFFFF;
+}
+
+.property.highlight .details {
+  display: flex;
+}
+
+.property.highlight .icon svg {
+  width: 50px;
+  height: 50px;
+}
+
+.property .fa-person-walking {
+  color: rgb(237, 167, 95);
+}
+
+.property .size {
+  color: #388E3C;
+}
+
+.property .fa-dollar-sign {
+	color: #bfb05e;
+}
+
+/*
+ * Building icon colors.
+ */
+ 
+.property.highlight:has(.fa-building) .icon {
+  color: var(--building-color);
+}
+
+.property:not(.highlight):has(.fa-building) {
+  background-color: var(--building-color);
+}
+
+.property:not(.highlight):has(.fa-building)::after {
+  border-top: 9px solid var(--building-color);
+}
+
+
+/******************************************/
+
+/* School-specific styles */
+.school {
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  color: #263238;
+  display: flex;
+  font-size: 14px;
+  gap: 15px;
+  height: 30px;
+  justify-content: center;
+  padding: 4px;
+  position: relative;
+  transition: all 0.3s ease-out;
+  width: 30px;
+}
+
+.school::after {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #FFFFFF;
+  content: "";
+  height: 0;
+  left: 50%;
+  position: absolute;
+  top: 95%;
+  transform: translate(-50%, 0);
+  transition: all 0.3s ease-out;
+  width: 0;
+  z-index: 1;
+}
+
+.school.highlight {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+  height: 80px;
+  padding: 8px 15px;
+  width: auto;
+}
+
+.school .icon {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.school .details {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+}
+
+.school.highlight .details {
+  display: flex;
+}
+
+.school.highlight .details .name {
+  font-weight: bold;
+}
+
+/*******************************************/
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #474a44;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #7fbd45;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #EFE9E1;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+/* Style the multiselect button */
+.btn-group {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 12px;
+}
+
+.multiselect-native-select {
+    width: 100%;
+}
+
+.btn-group > .btn {
+    color: white;
+    font-family: sans-serif;
+    font-weight: normal;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+}
+
+/* Style the button when hovered */
+.btn-group > .btn:hover {
+    background-color: #D0D5CE;
+    border-color: #57473A;
+}
+
+/* Style the dropdown menu */
+.dropdown-menu {
+    background-color: #EFE9E1;
+    border: 2px solid #6E8658;
+    border-radius: 8px;
+    padding: 8px;
+    width: 100%;
+}
+
+/* Style the dropdown items */
+.dropdown-menu > li > a {
+    color: #290907;
+    padding: 8px 12px;
+}
+
+.info-window {
+    color: black;  /* Override the inherited white color */
+}
+
+.info-window h3,  /* Also override for headings if needed */
+.info-window h4,
+.info-window p {
+    color: black;
+}
+
+
+#legend {
+	color: black;
+}
+
+
+/* search bar styling */
+
+#place-autocomplete-card {
+	background-color: #fff;
+	border-radius: 5px;
+	margin: 10px;
+	padding: 5px;
+	font-family: Roboto, sans-serif;
+	font-size: large;
+	font-weight: bold; 
+	color: black;
+	z-index: 1100;
+}
+
+gmp-place-autocomplete {
+  z-index: 1200 !important; /* Higher than your search overlay */
+}
+
+.place-autocomplete-element-place-result--matched {
+  pointer-events: auto !important;
+}
+
+#infowindow-content {
+	color: black;
+}
+
+#infowindow-content .title {
+	font-weight: bold;
+}
+
+#map #infowindow-content {
+	display: inline;
+}
+
+
+/* transit styles */
+.transit-station {
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  color: #263238;
+  display: flex;
+  font-size: 14px;
+  gap: 15px;
+  height: 30px;
+  justify-content: center;
+  padding: 4px;
+  position: relative;
+  transition: all 0.3s ease-out;
+  width: 30px;
+}
+
+.transit-station::after {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #FFFFFF;
+  content: "";
+  height: 0;
+  left: 50%;
+  position: absolute;
+  top: 95%;
+  transform: translate(-50%, 0);
+  transition: all 0.3s ease-out;
+  width: 0;
+  z-index: 1;
+}
+
+.transit-station .icon {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.transit-station .details {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+}
+
+.transit-station .name {
+  font-weight: bold;
+}
+
+.transit-station .type {
+  color: #666;
+  font-size: 12px;
+}
+
+.transit-station .address {
+  color: #9E9E9E;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.transit-station .rating {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.transit-station.highlight {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+  height: 100px;
+  padding: 8px 15px;
+  width: auto;
+}
+
+.transit-station.highlight .details {
+  display: flex;
+}
+
+
+
+.loading-spinner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rbga(0,0,0, 0.5);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+}
+
+.spinner-container {
+	text-align: center;
+	background-color: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0,0,0, 0.1);
+}
+
+.spinner {
+	width: 50px;
+	height: 50px;
+	border: 5px solid #f3f3f3;
+	border-top: 5px solid #7fbd45;
+	border-radius: 50%;
+	animation: spin 2s linear infinite;
+}
+
+
+.loading-text {
+	color: white;
+	margin-top: 10px;
+	font-family: Arial, san-serif;
+}
+
+@keyframes spin {
+	0% {transform: rotate(0deg);}
+	100% {transform: rotate(360deg);}
+}
+
+
+/* Radius around properties */
+.radius-popup {
+	position: absolute;
+	top: 80px;
+	right: 10px;
+	background-color: #407f7f;
+	padding: 10px 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+	z-index: 1000;
+	display: none;
+	border: 1px solid white;
+}
+
+.radius-content {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: white;
+}
+
+
+/******* Seach marker / button *******/
+.keyword-search-card {
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: #7fbd45 0px 5px 15px;
+	margin: 10px;
+	padding: 10px;
+	font-family: Roboto, san-serif;
+	z-index: 100;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+.search-container {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#keyword-input {
+	width: 280px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+#start-search-button, #clear-results-button, #confirm-search-button, #cancel-search-button {
+	padding: 8px 12px;
+	background-color: #7fbd45;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.2s;
+}
+
+#start-search-button:hover, #clear-results-button:hover, #confirm-search-button:hover {
+	background-color: #6ca038;
+}
+
+#cancel-search-button {
+	background-color: #d32f2f;
+}
+
+#cancel-search-button:hover {
+	background-color: #b71c1c;
+}
+
+.radius-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#search-radius {
+	width: 80px;
+	padding: 5px;
+}
+
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    /* z-index: 1000; */
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+    pointer-events: none; /* Allow for events to pass through the overlay */
+}
+
+.search-instructions {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    z-index: 1001;
+    pointer-events: auto;
+}
+
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 15px;
+	gap: 10px;
+}
+
+.place-result {
+	align-items: center;
+	background-color: #FFFFFF;
+	border-radius: 50%;
+	color: #263238;
+	display: flex;
+	font-size: 14px;
+	gap: 15px;
+	height: 30px;
+	justify-content: center;
+	padding: 4px;
+	position: relative;
+	transition: all 0.3s ease-out;
+	width: 30px;
+	cursor: pointer;
+}
+
+.place-result::after {
+	border-left: 9px solid transparent;
+	border-right: 9px solid transparent;
+	border-top: 9px solid #FFFFFF;
+	content: "";
+	height: 0;
+	left: 50%;
+	position: absolute;
+	top: 95%;
+	transform: translate(-50%, 0);
+	transition: all 0.3s ease-out;
+	width: 0;
+	z-index: 1;
+}
+
+.place-result .icon {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+.place-result .details {
+	display: none;
+	flex-direction: column;
+	flex: 1;
+}
+
+.place-result.highlight {
+	background-color: #FFFFFF;
+	border-radius: 8px;
+	box-shadow: 10px 10px 5px rgba(0,0,0,0.2);
+	height: 110px;
+	padding: 8px 15px;
+	width: auto;
+	z-index: 1002;
+}
+
+.place-result.highlight .details {
+	display: flex;
+}
+
+.search-center-marker {
+	color: pink;
+	font-size: 30px;
+	filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+	cursor: grabbing;
+	position: absolute;
+	/* z-index: 1100; */
+	pointer-events: auto;
+}
+
+
+.place-result .distance {
+	font-size: 12px;
+	color: #D32F2F;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.place-result .fa-location-arrow {
+	font-size: 10px;
+}
+
+/* Enhance info window styles */
+.info-window p strong {
+	color: #D32F2F;
+}
+
+
+
+
+

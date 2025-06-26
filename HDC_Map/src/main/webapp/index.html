@@ -4,11 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
      <title>HDC Map</title>
-     <link rel="stylesheet" type="text/css" href="styles.css" />
-     
-    <!-- Font Library --> 
-    <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
+     <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+         
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script> 
     
+    <!-- Font Library --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
+ 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     
@@ -30,58 +33,59 @@
     <!-- RequireJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
     
-  </head>
-  <body onload="initMap()">
 
+        
+  </head>
+  <body>
+	<div id="loadingSpinner" class="loading-spinner">
+	   <div class="spinner-container">
+		   <div class="spinner"></div>
+		   <div class="loaing-text">Loading...</div>
+	   </div>
+   </div>
+   		
 	<div id="container">
 		<div class="layers">	
-			
-			<div class="control-group">
-				<h2>HDC Map</h2>
-			</div>	
-			
-			<div class="control-group">
-				<span class="control-label">Opportunity Zones By Tract</span>
-				<label class="switch"> 
-				  <input type="checkbox" id="toggleTracts"> 
-				  <span class="slider round"></span> 
-				</label> 
+			<div class="mapHeader">
+				<a href="housing_calculator.html">
+					<i class="fa fa-home" aria-hidden="true"></i>
+					<i class="fa fa-calculator" aria-hidden="true"></i>
+				</a>
 			</div>
 			
-			<div class="control-group">
-				<span class="control-label">Station Area Overlay (light rail)</span>
+		   	<div class="control-group">
+				<span class="control-label">Census Tracts
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+						<i class="fa-solid fa-circle-info"></i>
+						<div class="info-text">US Census Tracts</div>
+					</span>
+				</span>
 				<label class="switch">
-				  <input type="checkbox" id="toggleSeattleStationOverlay">
-				  <span class="slider round"></span> 
-				</label> 
-			</div>
-			
-			<div class="control-group">
-				<span class="control-label">Mandatory Housing Affordability Zones</span>
-				<label class="switch">
-				  <input type="checkbox" id="toggleMHA">
-				  <span class="slider round"></span> 
-				</label> 
-			</div>
-			
-			<div class="control-group">
-				<span class="control-label">Urban Village</span>
-				<label class="switch">
-				  <input type="checkbox" id="toggleVillage">
-				  <span class="slider round"></span> 
+					<input type="checkbox" id="toggleCensusTracts">
+					<span class="slider round"></span>
 				</label>
 			</div>
 			
 			<div class="control-group">
-				<span class="control-label">Health Index</span>
+				<span class="control-label">Council Districts
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text"> Includes Seattle and Los Angeles Council Districts.</div>
+					</span>
+				</span>
 				<label class="switch">
-				  <input type="checkbox" id="toggleHealth">
+				  <input type="checkbox" id="toggleCD">
 				  <span class="slider round"></span> 
 				</label> 
 			</div>
 			
 			<div class="control-group">
-				<span class="control-label">King County</span>
+				<span class="control-label">Demographics
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Data from the American Community Surver (ACS) and Decennial Census on ethnic demographics and housing statistics by tract.</div>
+					</span>
+				</span>
 				<label class="switch">
 				  <input type="checkbox" id="toggleKing">
 				  <span class="slider round"></span> 
@@ -89,15 +93,25 @@
 			</div>
 			
 			<div class="control-group">
-				<span class="control-label">Small Fair Market Rent</span>
+				<span class="control-label">FMR - MSA
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Fair Market Rents (SAFMRs) are FMRs calculated for ZIP Codes for all Metropolitan Statistical Areas in HUD.</div>
+					</span>
+				</span>
 				<label class="switch">
-				  <input type="checkbox" id="toggleFMR">
+				  <input type="checkbox" id="toggleUSFMR">
 				  <span class="slider round"></span> 
-				</label> 
+				</label>
 			</div>
 			
 			<div class="control-group">
-				<span class="control-label">US Small Fair Market Rents</span>
+				<span class="control-label">FMR - Small Area
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Small Area Fair Market Rents (SAFMRs) are FMRs calculated for ZIP Codes. Small Area FMRs are required to be used to set Section 8 Housing Choice Voucher payment standards in areas designated by HUD.</div>
+					</span>
+				</span>
 				<label class="switch">
 				  <input type="checkbox" id="toggleSAFMR">
 				  <span class="slider round"></span> 
@@ -105,18 +119,258 @@
 			</div>
 			
 			<div class="control-group">
+				<span class="control-label">HACLA Delta
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text"> Includes voucher payment standards (VPS) with tier qualification at the zipcode level.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleDelta">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">HACLA VPS
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text"> Includes voucher payment standards (VPS) with tier qualification at the zipcode level.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleVPS">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Health Index
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">
+							Census tract based sub-index of the Racial and Social Equity Index tool to aid in the 
+							identification of City planning, program and investment priorities.
+						</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleHealth">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			   	
+		   	<div class="control-group">
+				<span class="control-label">HOA AFFH
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+						<i class="fa-solid fa-circle-info"></i>
+						<div class="info-text">Census tracts that are considered High Opportunity Areas by the Affimatively Furthering Fair Housing, AFFH, agency. Governed by California Tax Credit Allocation Committee and Housing and Community Development.</div>
+					</span>
+				</span>
+				<label class="switch">
+					<input type="checkbox" id="toggleAFFH">
+					<span class="slider round"></span>
+				</label>
+			</div>
+			
+		    <div class="control-group">
+				<span class="control-label">HOA FHFA		
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Census tracts that are considered High Opportunity Areas by the Federal Housing Finance Agency, FHFA.</div>
+					</span>
+				</span>
+				<label class="switch"> 
+				  <input type="checkbox" id="toggleHOA"> 
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">MHA
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Mandatory Housing Affordability requires new development to contribute to affordable housing by including affordable housing in the development or making a payment to the City’s Office of Housing to support affordable housing. The amount of the MHA contribution varies based on a property’s location and other factors specified in Seattle Municipal Code Chapters 23.58B and 23.58C.  </div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleMHA">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+		    <div class="control-group">
+				<span class="control-label">OZs		
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Census tracts that are economically-distressed communities where new investments may, under certain conditions, be eligible for preferential federal tax treatment or preferential consideration for federal grants and programs.</div>
+					</span>
+				</span>
+				<label class="switch"> 
+				  <input type="checkbox" id="toggleTracts"> 
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Red/Blue State
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">2024 Presidential Election Results.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleRedBlue">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">Seattle Station Areas
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">City of Seattle's land use zoning overlay around Sound Transit light rail stations.</div>
+					</span>
+				</span>
+				
+				<label class="switch">
+				  <input type="checkbox" id="toggleSeattleStationOverlay">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">SDCI Zoning
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">A generalized version of the City of Seattle's land use zoning symbolized at the zoning group level with 28 categories.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleSeattleZoningCode">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">SDCI Zoning LR1
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">A generalized version of the City of Seattle's land use zoning symbolized at the zoning group level with 28 categories.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleSeattleZoningLR1">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">SDCI Frequent Transit
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">An area within 1,320 feet walking distance of a bus stop served by a frequent transit route or an area within 2,640 feet walking distance of a rail transit station, as shown on a map adopted by Director's Rule.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleFrequentTransit">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+				
+			<div class="control-group">
+				<span class="control-label">Urban Village
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">
+							Sub-villages of City of Seattle Urban Centers.
+							Growth data for housing units and employment for recognized sub-villages of three of the City of Seattle's designated urban centers.
+							Housing unit growth is reported quarterly from the city's permitting system while employment change is reported annually from the State of Washington QCEW data.
+						</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleVillage">
+				  <span class="slider round"></span> 
+				</label>
+			</div>
+			
+			<div class="control-group">
+				<span class="control-label">USDA Ineligible Areas		
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">USDA Rural Development Property Ineligibility (SFH/MFH) Zones. Used to determine eligibility for certain USDA Single Family Housing and Multi-Family Housing loan and grant programs.</div>
+					</span>
+				</span>
+				<label class="switch"> 
+				  <input type="checkbox" id="toggleUSDA"> 
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+															
+			<!--
+			<div class="control-group">
+				<span class="control-label">County FMR and VPS
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Includes SAFMR for LA and King County. Includes voucher payment standards (VPS) with tier qualification at the zipcode level.</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleFMR">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			-->	
+			
+			<div class="control-group">
+				<span class="control-label">Overlap layers
+					<span class="info-icon" tabindex="0" role="button" aria-label="Information">
+					    <i class="fa-solid fa-circle-info"></i>
+					    <div class="info-text">Show me overlapping layers</div>
+					</span>
+				</span>
+				<label class="switch">
+				  <input type="checkbox" id="toggleOverlap">
+				  <span class="slider round"></span> 
+				</label> 
+			</div>
+			
+
+			<div class="control-group">
+				<select id="transit" multiple="multiple">
+				    <option value="bus">Bus Station</option>
+				    <option value="subway">Subway Station</option>
+				    <option value="light_rail">Light Rail Station</option>
+				    <option value="train">Train Station</option>
+				    <option value="transit">Transit Station</option>
+				</select> 	
+			</div>
+			
+			
+			<div class="control-group">
 				<select id="sponsors" multiple="multiple">
 				    <option value="hdc">Housing Diversity Corp</option>
 				    <option value="ozn">OZ Navigator</option>
 				    <option value="anew">Anew Apartments</option>
 				    <option value="apodments.com">aPodments.com</option>
+				    <option value="acquisitions">Acquistions</option>
+				    <option value="comps">Comps</option>
+				</select> 	
+			</div>
+			
+			<div class="control-group">
+				<select id="schools" multiple="multiple">
+				    <option value="LACCD">LACCD</option>
+				    <option value="public">Public Universities</option>
+				    <option value="private">Private Universities</option>
 				</select> 	
 			</div>
 		</div>	
-	
-	
-		<br/>
 		
+		
+		
+		</br>
 		<div id="legend" style="display: none; position: absolute; bottom: 30px; right: 30px; z-index: 1000; background: white; padding: 10px; border: 1px solid #ccc;">
 		  <h4>SAFMR Scores</h4>
 		  <h6>For One Bedroom</h6>
@@ -130,571 +384,58 @@
 		  </div>
 		</div>
 		
+		<div id="radius-popup" class="radius-popup" style="display: none;">
+			<div class="radius-content">
+				<span class="control-label">Show 1-mile Radius</span>
+				<label class="switch">
+					<input type="checkbox" id="toggleRadius">
+					<span class="slider round"></span>
+				</label>
+			</div>
+		</div>
+		
+		<div class="keyword-search-card" id="keyword-search-card">
+			<div class="search-container">
+				<input type="text" id="keyword-input" placeholder="Search for places (e.g. Kbbq, Pho, Coffee, etc)">
+				<div class="radius-container" style="color: black;">
+					<label for="search-radius">Radius (m):</label>
+					<input type="number" id="search-radius" value="1000" min="100" max="5000" step="100">
+				</div>
+				<button id="start-search-button">Find Places</button>
+				<button id="csv-converter">Convert to CSV</button>
+				<button id="clear-results-button">Clear Results</button>
+			</div>
+		</div>
+	
+		<div id="search-overlay" class="search-overlay">
+			<div class="search-instructions">
+				<p>Drag the marker to your desired search location</p>
+				<div class="button-container">
+					<button id="cancel-search-button">Cancel</button>
+					<button id="confirm-search-button">Search Here</button>
+				</div>
+			</div>
+		</div>	
+		
+		<div class="place-autocomplete-card" id="place-autocomplete-card">
+			<p style="color:black">Search for a place here: </p>
+		</div>		
 		<div id="map"></div>
    </div>
- 
+   
     <script>
-      let map;
-      let wa_oz_tract_layer;
-      let seattle_station_layer;
-      let mha_layer;
-      let health_layer;
-      let village_layer;
-      
-      let king_county_layer;
-      let fmr_layer;
-      let zip_codes;
-      
-      let hdc_properties = [];
-      let ozn_properties = [];
-      let anew_properties = [];
-      let apod_properties = [];
-      
-      const sponsorMap = new Map([
-     	['hdc', hdc_properties],
-     	['ozn', ozn_properties],
-     	['anew', anew_properties],
-     	['apodments.com', apod_properties] 
-      ]);
-      
-      const sponsorColor = {
-		  'hdc': '#6E8658',
-		  'ozn': '#57473A',
-		  'anew': '#BE9A60',
-		  'apodments.com':'#73A1B2'
-	  }
-      
-      async function initMap() {
-		const { Map } = await google.maps.importLibrary("maps");
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-        
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(47.606370, -122.320401), 
-          zoom: 10,
-          mapId: "4504f8b37365c3d0",
-        });
-        
-        window.AdvancedMarkerElement = AdvancedMarkerElement;
-        
-        wa_oz_tract_layer = new google.maps.Data();
-        seattle_station_layer = new google.maps.Data();
-        mha_layer = new google.maps.Data();
-        low_income_layer = new google.maps.Data();
-        village_layer = new google.maps.Data();
-        health_layer = new google.maps.Data();
-        king_county_layer = new google.maps.Data();
-        fmr_layer = new google.maps.Data();
-        zip_codes = new google.maps.Data();
-        
-        wa_oz_tract_layer.loadGeoJson("wa_oz.geojson");
-        seattle_station_layer.loadGeoJson("seattle_station_overlay.txt"); 
-        mha_layer.loadGeoJson("MHA_zone.geojson");
-        village_layer.loadGeoJson("urban_center.geojson");
-       	health_layer.loadGeoJson("health_index2.geojson");
-       	king_county_layer.loadGeoJson("king_county_housing.geojson");
-       	fmr_layer.loadGeoJson("fmr_vps.geojson");
-       	zip_codes.loadGeoJson("zip_code_safmr.geojson");
-       	
-       	
-       	infoWindow = new google.maps.InfoWindow();
-        
-        //set up event listeners
-        document.getElementById('toggleTracts').addEventListener('change', toggleTracts);
-        document.getElementById('toggleSeattleStationOverlay').addEventListener('change', toggleSeattleStationOverlay);
-        document.getElementById('toggleMHA').addEventListener('change', toggleMHA);
-        document.getElementById('toggleVillage').addEventListener('change', toggleVillage);
-        document.getElementById('toggleHealth').addEventListener('change', toggleHealth);
-        document.getElementById('toggleKing').addEventListener('change', toggleKing);
-        document.getElementById('toggleFMR').addEventListener('change', toggleFMR);
-        document.getElementById('toggleSAFMR').addEventListener('change', toggleSAFMR);
-      }
-      
-      async function toggleSAFMR(){
-		  const legendElement = document.getElementById('legend');
-		   if (document.getElementById('toggleSAFMR').checked) {
-		    zip_codes.setStyle(function(feature) {
-		      const msa_score = feature.getProperty('score');
-		      const us_score = feature.getProperty('us_score');
-		      
-			  // Determine fill color based on MSA score
-			  let fillColor;
-			  if (msa_score >= 0.9) {
-				  fillColor = 'green';
-			  } else if (msa_score >= 0.8) {
-			      fillColor = 'yellow';
-			  } else if (msa_score >= 0.7) {
-			      fillColor = 'red';
-			  } else {
-			      fillColor = 'gray';
-			  }
-			
-		      // Determine stroke color based on US score
-		      let strokeColor;
-		      if (us_score >= 0.9) {
-		        strokeColor = 'green';
-		      } else if (us_score >= 0.8) {
-		        strokeColor = 'yellow';
-		      } else if (us_score >= 0.7) {
-		        strokeColor = 'red';
-		      } else {
-		        strokeColor = 'gray';
-		      }
-		      
-		      // Determine z-index based on stroke color priority
-		      let zIndex;
-		      switch (strokeColor) {
-		        case 'green':
-		          zIndex = 4;
-		          break;
-		        case 'yellow':
-		          zIndex = 3;
-		          break;
-		        case 'red':
-		          zIndex = 2;
-		          break;
-		        default:
-		          zIndex = 1;
-		      }
-			
-		      return {
-		        fillColor: fillColor,
-		        fillOpacity: 0.7,
-		        strokeColor: strokeColor,
-		        strokeOpacity: 1,
-		        strokeWeight: 2,
-		        zIndex: zIndex
-		      };
-		    });
+	 (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r,"geometry"]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+     ({key: "AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE", v: "beta"});
+    </script>
 	
-		    zip_codes.addListener('click', handleMouseClickSAFMR);
-		    zip_codes.setMap(map);
-		    legendElement.style.display = 'block'; // Show the legend
-		  } else {
-		    zip_codes.setMap(null);
-		    legendElement.style.display = 'none'; // Show the legend
-		  }
-	  }
-     
-      
-      function toggleTracts(){
-		if (document.getElementById('toggleTracts').checked){
-			wa_oz_tract_layer.setStyle({
-			    fillColor: 'green',
-			    strokeColor: '#000',
-			    strokeOpacity: 1,
-			    strokeWeight: 1
-			 });
-			 
-			 wa_oz_tract_layer.setMap(map);	
-		} else {
-			wa_oz_tract_layer.setMap(null);
-		}
-	  }
-	  
-	  
-	  function toggleSeattleStationOverlay(){
-		  if (document.getElementById('toggleSeattleStationOverlay').checked){
-			   seattle_station_layer.setStyle({
-				    fillColor: 'purple',
-				    strokeColor: '#000',
-				    strokeOpacity: 1,
-				    strokeWeight: 1
-			   });
-				
-			   seattle_station_layer.setMap(map);  
-		  } else {
-			  seattle_station_layer.setMap(null);
-		  }
-	  }
-	  
-	   function toggleMHA(){
-		if (document.getElementById('toggleMHA').checked){			
-			mha_layer.setStyle({
-			    fillColor: 'blue',
-			    strokeColor: '#000',
-			    strokeOpacity: 1,
-			    strokeWeight: 1
-			 });
-			 
-			 mha_layer.setMap(map);	
-		} else {
-			mha_layer.setMap(null);
-		}
-	  }
-	  
-	  function toggleVillage(){
-		  if (document.getElementById('toggleVillage').checked){
-			  console.log("in toogleVillage");
-			  village_layer.setStyle({
-			    fillColor: 'yellow',
-			    strokeColor: '#000',
-			    strokeOpacity: 1,
-			    strokeWeight: 1
-			 });
-			 
-			 village_layer.setMap(map);
-		  } else {
-			  village_layer.setMap(null);
-		  }
-	  }
-	  
-	 async function toggleHealth(){
-		if (document.getElementById('toggleHealth').checked){		
-			  health_layer.setStyle(function(feature) {
-				var healthScore = feature.getProperty('HEALTH_DISADV_SCORE');  
-				console.log(feature);
-				console.log("health score: ", healthScore);
-				return {
-					fillColor: 'red',
-					fillOpacity: healthScore,
-				    strokeColor: '#000',
-				    strokeOpacity: 1,
-				    strokeWeight: 0.5
-				};
-			 });
-			 
-			 health_layer.addListener('mouseover', handleMouseOver);
-			 health_layer.addListener('mouseout', handleMouseOut);
-			 
-			 health_layer.setMap(map);
-		} else {
-			health_layer.setMap(null);
-		}
-	  }
-	  
-	  async function toggleKing(){
-		if (document.getElementById('toggleKing').checked){		
-			  king_county_layer.setStyle(function(feature) {
-				console.log(feature);
-				
-				var income = feature.getProperty('income');
-				var rent = feature.getProperty('median_rent');
-				var renter_pct = feature.getProperty('rental_pct');
-				
-				if (rent < 0) {
-					console.log("nan rent", rent);
-					rent = 1000;
-					console.log("non nan rent", rent);
-				}
-				
-				var burdened = rent * 12 / income;
-
-				return {
-					fillColor: 'purple',
-					fillOpacity: renter_pct,
-				    strokeColor: '#000',
-				    strokeOpacity: 1,
-				    strokeWeight: .5
-				};     
-			 });
-			 
-			 king_county_layer.addListener('click', handleMouseClickKing);
-			 
-			 king_county_layer.setMap(map);
-		} else {
-			king_county_layer.setMap(null);
-		}
-	  }
-	  
-	  async function toggleFMR(){
-		  if (document.getElementById('toggleFMR').checked){
-			  let min = Infinity;
-			  let max = -Infinity;
-			  
-			  fmr_layer.forEach((feature) => {
-				  const fmr = feature.getProperty('One-Bedroom');
-				  if (fmr < min) min = fmr;
-				  if (fmr > max) max = fmr;
-			  });
-			  
-			  		
-			  fmr_layer.setStyle(function(feature) {
-				var zip = feature.getProperty('zip_code');  
-				console.log(feature);
-				
-				const fmr = feature.getProperty('One-Bedroom');
-				const normalizedFMR = (fmr - min) /(max - min);
-				
-				// Interpolate between red (low FMR) and green (high FMR)
-				let red, green;
-		        if (normalizedFMR < 0.5) {
-			        // Red to Yellow
-			        red = 255;
-			        green = Math.round(255 * (normalizedFMR * 2));
-		        } else {
-			        // Yellow to Green
-			        red = Math.round(255 * ((1 - normalizedFMR) * 2));
-			        green = 255;
-		        }
-				
-				const color = `rgb(${red}, ${green}, 0)`;
-				console.log(color);
-		
-				return {
-					fillColor: color,
-					fillOpacity: .7,
-				    strokeColor: '#000',
-				    strokeOpacity: 1,
-				    strokeWeight: .5
-				};
-			 });
-			 
-			 fmr_layer.addListener('click', handleMouseClickFMR);
-			 
-			 fmr_layer.setMap(map);
-		} else {
-			 fmr_layer.setMap(null);
-		}
-		  
-	  }
-	  
-	  function handleMouseClickKing(event){
-		  console.log("in king mouse click");
-	       var content = '<div class="info-window">' +
-	          '<h4> Income: ' + event.feature.getProperty('income') + '</h4>' +
-	          '<h3> Tract: ' + event.feature.getProperty('tract') + '</h3>' +
-	          '<p>american_indian: ' + event.feature.getProperty('american_indian') + '</p>' +
-	          '<p>asian: ' + event.feature.getProperty('asian') + '</p>' +
-	          '<p>black: ' + event.feature.getProperty('black') + '</p>' +
-	          '<p>hispanic: ' + event.feature.getProperty('hispanic') + '</p>' +
-	          '<p>white: ' + event.feature.getProperty('white') + '</p>' +
-	          '<p>median_rent ' + event.feature.getProperty('median_rent') + '</p>' +
-	          '<p>rental_units: ' + event.feature.getProperty('rental_units') + '</p>' +
-	          '<p>total_units: ' + event.feature.getProperty('total_units') + '</p>' +
-	          '<p>rental units / total units: ' + event.feature.getProperty('rental_pct').toFixed(3) + '</p>' +
-	          '</div>';
-	          
-	          infoWindow.setContent(content);
-	          infoWindow.setPosition(event.latLng);
-	          
-	          infoWindow.open(map);
-	  }
-	  
-	  function handleMouseOver(event){
-		  console.log("in mouse click");
-		  
-		  var content = '<div class="info-window">' +
-	          '<h4> Census Tract: ' + event.feature.getProperty('GEOID') + '</h4>' +
-	          '<p>Health Disadvantage Score: ' + event.feature.getProperty('HEALTH_DISADV_SCORE').toFixed(3) + '</p>' +
-	          '<p>Health Disadvantage Quntile: ' + event.feature.getProperty('HEALTH_DISADV_QUINTILE') + '</p>' +
-	          '<p>Life Expectancy: ' + event.feature.getProperty('LIFE_EXPECTANCY_AT_BIRTH').toFixed(1) + ' years</p>' +
-	          '<p>Adults with Obesity: ' + (event.feature.getProperty('PCT_ADULT_WITH_OBESITY') * 100).toFixed(1) + '%</p>' +
-	          '<p>Adults with Diabetes: ' + (event.feature.getProperty('PCT_ADULT_WITH_DIABETES') * 100).toFixed(1) + '%</p>' +
-	          '<p>Adults with Asthma: ' + (event.feature.getProperty('PCT_ADULT_WITH_ASTHMA') * 100).toFixed(1) + '%</p>' +
-	          '</div>';
-	          
-	          infoWindow.setContent(content);
-	          infoWindow.setPosition(event.latLng);
-	          
-	          infoWindow.open(map);
-	  }
-	  
-	  function handleMouseClickFMR(event){
-		  console.log("in mouse click");
-		  
-		  var tier = event.feature.getProperty('tier');
-		  if (tier != null){
-			  tier = tier.toString();
-			  if (tier == '4') tier = "VPS";
-		  } 
-		  
-		  var content = '<div class="info-window">' +
-	          '<h4>Zip Code: ' + event.feature.getProperty('zip_code') + '</h4>' +
-	          '<p>Efficiency: ' + event.feature.getProperty('Efficiency') + '</p>' +
-	          '<p>One-Bedroom: ' + event.feature.getProperty('One-Bedroom') + '</p>' +
-	          '<p>Two-Bedroom: ' + event.feature.getProperty('Two-Bedroom') + ' </p>' +
-	          '<p>Three-Bedroom: ' + event.feature.getProperty('Three-Bedroom') + '</p>' +
-	          '<p>Four-Bedroom: ' + event.feature.getProperty('Four-Bedroom') + '</p>' +
-	          '<p>tier: ' +  tier + '</p>' +
-	          '<p>vps_0: ' + event.feature.getProperty('vps_0') + '</p>' +
-	          '<p>vps_1: ' + event.feature.getProperty('vps_1') + '</p>' +
-	          '<p>vps_2: ' + event.feature.getProperty('vps_2') + '</p>' +
-	          '<p>vps_4: ' + event.feature.getProperty('vps_4') + '</p>' +
-	          '</div>';
-	          
-	          infoWindow.setContent(content);
-	          infoWindow.setPosition(event.latLng);
-	          
-	          infoWindow.open(map);
-	  }
-	  
-	  function handleMouseClickSAFMR(event){		  
-		  var content = '<div class="info-window">' +
-	          '<h4>' + event.feature.getProperty('area_name') + '</h4>' +
-	          '<h4>Zip Code: ' + event.feature.getProperty('zip_code') + '</h4>' +
-	          '<p>Efficiency: ' + event.feature.getProperty('Efficiency') + '</p>' +
-	          '<p>One-Bedroom: ' + event.feature.getProperty('One-Bedroom') + '</p>' +
-	          '<p>Two-Bedroom: ' + event.feature.getProperty('Two-Bedroom') + ' </p>' +
-	          '<p>Three-Bedroom: ' + event.feature.getProperty('Three-Bedroom') + '</p>' +
-	          '<p>Four-Bedroom: ' + event.feature.getProperty('Four-Bedroom') + '</p>' +
-	          '<p>Min-One-Bed: ' + event.feature.getProperty('min_oneBed') + '</p>' +
-	          '<p>Max-One-Bed: ' + event.feature.getProperty('max_oneBed') + '</p>' +
-	          '<p>MSA Score: ' + event.feature.getProperty('score') + '</p>' +
-	          '<p>US Score: ' + event.feature.getProperty('us_score') + '</p>' +
-	          '<p>Year: ' + event.feature.getProperty('year') + '</p>' +
-	          '</div>';
-	          
-	          infoWindow.setContent(content);
-	          infoWindow.setPosition(event.latLng);
-	          
-	          infoWindow.open(map);
-	  }
-	  
-	  function handleMouseOut(event){  
-	  	  infoWindow.close();
-	  }
-	   
-	  function escapeHtml(unsafe) {
-		  return unsafe 
-		  .replace(/&/g, "&amp;")
-		  .replace(/</g, "&lt;")
-		  .replace(/>/g, "&gt;")
-		  .replace(/"/g, "&quot;")
-		  .replace(/'/g, "&#039;");
-	  }
-	  
-	  function toggleHighlight(markerView, property) {
-		  if (markerView.content.classList.contains("highlight")) {
-		    markerView.content.classList.remove("highlight");
-		    markerView.zIndex = null;
-		  } else {
-		    markerView.content.classList.add("highlight");
-		    markerView.zIndex = 1;
-		  }
-	  }
-	  		
-		$(document).ready(function() {
-	        $('#sponsors').multiselect({
-	            includeSelectAllOption: true,
-	            nonSelectedText: 'Select Properites',
-	            
-	            onChange: function(option, checked) {
-		            // Get the value of the changed option
-		            var value = $(option).val();
-		            
-		            // Check if the option was selected or deselected
-		            if (checked) {
-		                console.log('Option ' + value + ' was selected');
-		                // Call function to show properties for this sponsor
-		                showProperties(value);
-		            } else {
-		                console.log('Option ' + value + ' was deselected');
-		                // Call function to hide properties for this sponsor
-		                hideProperties(value);
-		            }
-	        	},
-		        onSelectAll: function() {
-		            console.log('All options were selected');
-		            // Call function to show all properties
-		            showAllProperties();
-		        },
-		        onDeselectAll: function() {
-		            console.log('All options were deselected');
-		            // Call function to hide all properties
-		            hideAllProperties();
-		        }
-	        });	        
-    	});
-    	
-    	
-    	async function showProperties(sponsor) {
-		    if (!map) return;
-		    let properties = sponsorMap.get(sponsor);
-		    if (properties.length === 0) {
-		        await fetchAndCreateMarkers(sponsor);
-		    }
-		    properties = sponsorMap.get(sponsor);
-		    properties.forEach(marker => marker.setMap(map));
-		}
-		
-		function hideProperties(sponsor) {
-		    const properties = sponsorMap.get(sponsor);
-		    properties.forEach(marker => marker.setMap(null));
-		}
-		    	
-    	function showAllProperties() {
-		    sponsorMap.forEach((properties, sponsor) => {
-		        showProperties(sponsor);
-		    });
-		}
-		
-		function hideAllProperties() {
-		    sponsorMap.forEach((properties) => {
-		        properties.forEach(marker => marker.setMap(null));
-		    });
-		}
-    	
-    	
-    	async function fetchAndCreateMarkers(sponsor) {
-		    try {
-		        const response = await fetch("/HDC_Map/getDataServlet");
-		        const data = await response.json();
-		        
-		        data.forEach(item => {
-		            if (item.owner.toLowerCase() === sponsor) {
-		                const marker = new window.AdvancedMarkerElement({
-		                    map: map,
-		                    content: buildContent(item),
-		                    position: {
-		                        lat: parseFloat(item.lat),
-		                        lng: parseFloat(item.lng)
-		                    },
-		                    title: item.owner,
-		                });
-		                
-		                marker.addListener("click", () => {
-		                    toggleHighlight(marker, item);
-		                });
-		                
-		                sponsorMap.get(sponsor).push(marker);
-		            }
-		        });
-		    } catch (error) {
-		        console.error("Error fetching property data:", error);
-		    }
-		 }
-		 
-		function buildContent(property) {
-		  const content = document.createElement("div");
-		  const owner = property.owner.toLowerCase();
-		  const color = sponsorColor[owner];
-		
-		  content.classList.add("property");
-		  content.innerHTML = `
-		    <div class="icon">
-		        <i aria-hidden="true" class="fa fa-icon fa-building" title="building" style="color: ${color};"></i>
-		        <span class="fa-sr-only">building</span>
-		    </div>
-		    <div class="details">
-		        <div class="owner">${property.owner}: ${property.name}</div>
-		        <div class="address">${property.address}</div>
-		        <div class="features">
-		        <div>
-		            <i aria-hidden="true" class="fa-solid fa-door-open" title="room"></i>
-		            <span class="fa-sr-only">room</span>
-		            <span>${property.units}</span>
-		        </div>
-		        <div>
-		            <i aria-hidden="true" class="fa-solid fa-person-walking" title="walk_score"></i>
-		            <span class="fa-sr-only">Walk Score</span>
-		            <span>${property.walk_score}/100</span>
-		        </div>
-		        <div>
-		            <i aria-hidden="true" class="fa fa-ruler fa-lg size" title="size"></i>
-		            <span class="fa-sr-only">size</span>
-		            <span>${property.bld_size} ft<sup>2</sup></span>
-		        </div>
-		        </div>
-		    </div>
-		    `;
-		  return content;
-		}
+	<!--
+   <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&loading=async&callback=initMap">
     </script>
-        
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&libraries=visualization&callback=initMap">
-    </script>
+    -->
     
+    <script src="javascript/map.js"></script>
+    <script src="javascript/tooltip.js"></script>
     
   </body>
 </html>

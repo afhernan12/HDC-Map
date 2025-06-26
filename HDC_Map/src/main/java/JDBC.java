@@ -2,16 +2,10 @@ import java.sql.*;
 
 public class JDBC {
 	public static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-	public static final String JDBC_URL = "jdbc:mysql://localhost:3306/property_db";
+	//public static final String JDBC_URL = "jdbc:mysql://3.133.123.66:3306/property_db";
+    public static final String JDBC_URL = "jdbc:mysql://172.31.5.105:3306/property_db";
 	public static final String USER = "root";
-	//public static final String PASS = "Super@ngel13!";
-//	public static final String USER = "angel_hdc";
-//	public static final String PASS = "Super@ngel13!";
-	
-//    public static final String JDBC_URL = "jdbc:mysql://localhost:3306/property_db";
-//    public static final String USER = "root";
-    public static final String PASS = "afhernan";
-	
+    public static final String PASS = "Super@ngel13!";
 	
 	private static Connection conn;
 	private static Statement st;
@@ -29,11 +23,53 @@ public class JDBC {
 	
 			st = conn.createStatement();
 			rs = st.executeQuery("select * from property");
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+            System.out.println("General Exception:");
+            e.printStackTrace();
+            return null;
+        }
+		return rs;
+	}
+	
+	public static ResultSet getComps() throws ClassNotFoundException {
+		System.out.println("in jdbc getComps function");
+		
+		try {
+			Class.forName(JDBC_DRIVER);
+			System.out.println("Driver loaded sucess");
+			conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			System.out.println("Connected to Database");
 			
-//			while (rs.next()) {
-//				System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " +
-//						rs.getString(4) + " " + rs.getString(5));
-//			}
+			st = conn.createStatement();
+			rs = st.executeQuery("select * from comps");
+
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			sqle.printStackTrace();
+		} catch (Exception err) {
+			System.out.println(err.getMessage());
+			err.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	public static ResultSet getSchool() throws ClassNotFoundException {
+		System.out.println("in jdbc get school function");
+		
+		try {			
+			Class.forName(JDBC_DRIVER);
+			System.out.println("Driver loaded successfully");
+			conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			System.out.println("Connected to database successfully");
+	
+			st = conn.createStatement();
+			rs = st.executeQuery("select * from school");
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

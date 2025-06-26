@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Housing Calculator</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	</head>
+	
+	<link rel="stylesheet" type="text/css" href="styles/calc.css" />
+	 <script src="https://use.fontawesome.com/releases/v6.2.0/js/all.js"></script>
+
+<body onload="initMap()">
+    <header>
+		<div class="myHeader">
+			<h1>Housing Calculator</h1> 
+			<a href="index.html"><i class="fa fa-home" aria-hidden="true"></i></a>  
+		</div> 
+    </header>
+
+    <main>
+        <section>
+            <h2>Welcome to the Housing Calculator</h2>
+            <p>Enter your information to find out housing options available to you.</p>
+            
+            <form id="calculator-form">
+                <label for="income">Annual Income:</label>
+                <input type="number" id="income" name="income" required>
+                
+                <label for="rent-increase">Increase Rent:</label>
+                <input type="number" id="rent-increase" name="rent-increase" placeholder="Enter amount">
+
+                <label for="utilities-increase">Increase Utilities:</label>
+                <input type="number" id="utilities-increase" name="utilities-increase" placeholder="Enter amount">
+
+                <label for="parking-fee">Parking Fee:</label>
+                <input type="number" id="parking-fee" name="parking-fee" placeholder="Enter amount">
+
+                <label for="renters-insurance">Renters Insurance:</label>
+                <input type="number" id="renters-insurance" name="renters-insurance" placeholder="Enter amount">
+                
+                <button type="submit">Calculate</button>
+            </form>
+        </section>
+        
+        <br/> 
+        <section id="results">
+            <h2>Results</h2>
+            <p>Your results will appear here after clicking on tract.</p>
+            <div id="graphContainer">
+                <div class="quadrant-container">
+                    <div class="quadrant">
+                        <div class="quadrant-content">
+                            <canvas id="incomeBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant-content">
+                            <canvas id="displacedBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant-content">
+                            <div id="tractInfo"></div>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant-content">
+                            <canvas id="racePieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br/>
+        
+        <span class="info-icon" tabindex="0" role="button" aria-label="Information">
+			<i class="fa-solid fa-circle-info"></i>
+			<div class="info-text">The following map show tracts where total rent (base rent, utilities, fees) is greater than 30% of your annual income. Try adjusting the filters to see how small changes in housing can impact you affordability</div>
+		</span>
+		
+		<br/>
+   
+        <div id="map"></div>
+    </main>
+    
+  
+	<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlYMTJTtHI0tE4RnaKS54xv0Qf8kBvzKE&libraries=visualization&loading=async&callback=initMap">
+    </script>
+	 <script src="javascript/calculator.js"></script> 
+	 <script src="javascript/tooltip.js"></script>
+	
+</body>
+</html>
